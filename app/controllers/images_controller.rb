@@ -3,7 +3,7 @@ class ImagesController < ApplicationController
     param! :html, String
     param! :url, String
     param! :full_page, :boolean, default: false
-    param! :type, String, default: "png", in: %w(png jpeg webp)
+    param! :type, String, default: "png", in: %w[png jpeg webp]
     param! :extra_http_headers, Hash, default: {}
     param! :viewport, Hash, default: {} do |viewport|
       viewport.param! :width, Integer, default: 1280
@@ -36,8 +36,7 @@ class ImagesController < ApplicationController
 
       send_data image, type: Mime::Type.lookup_by_extension(params[:type]).to_s, disposition: "inline"
     end
-
   rescue RailsParam::InvalidParameterError => e
-    render json: { error: e.message }, status: :bad_request
+    render json: {error: e.message}, status: :bad_request
   end
 end

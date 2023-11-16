@@ -21,3 +21,7 @@ jobs:
           bundler-cache: true
       - name: Run test
         run: bin/rails test
+      - name: Run brakeman
+        run: bundle exec brakeman
+      - name: Run standardrb
+        run: bundle exec standardrb
