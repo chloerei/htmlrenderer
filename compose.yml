@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
+    entrypoint: bin/docker-entrypoint
     command: bin/rails server -b 0.0.0.0
     cap_add:
       - SYS_ADMIN

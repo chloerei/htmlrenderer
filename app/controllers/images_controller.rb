@@ -1,42 +1,34 @@
 class ImagesController < ApplicationController
   def create
-    viewport_width = params.fetch(:viewport_width, 1280).to_i
-    viewport_height = params.fetch(:viewport_height, 800).to_i
-    device_scale_factor = params.fetch(:device_scale_factor, 2).to_i
-    full_page = params.fetch(:full_page, false)
-    html = params[:html]
-    url = params[:url]
-    type = params.fetch(:type, "png")
+    param! :viewport_width, Integer, default: 1280
+    param! :viewport_height, Integer, default: 800
+    param! :device_scale_factor, Integer, default: 2
+    param! :html, String
+    param! :url, String
+    param! :full_page, :boolean, default: false
+    param! :type, String, default: "png", in: %w(png jpeg webp)
 
-    if html.nil? && url.nil?
-      render json: { error: "You must provide either `html` or `url` parameter" }, status: :bad_request
-      return
-    end
-
-    if html.present? && url.present?
-      render json: { error: "You must provide either `html` or `url` parameter, not both" }, status: :bad_request
-      return
-    end
-
-    if !type.in?(%w(png jpeg webp))
-      render json: { error: "Invalid `type` parameter" }, status: :bad_request
-      return
+    if (params[:html].blank? && params[:url].blank?) || (params[:html].present? && params[:url].present?)
+      raise RailsParam::InvalidParameterError, "Either `html` or `url` must be provided"
     end
 
     Puppeteer.launch do |browser|
       page = browser.new_page
 
-      page.viewport = Puppeteer::Viewport.new(width: viewport_width, height: viewport_height, device_scale_factor: device_scale_factor)
+      page.viewport = Puppeteer::Viewport.new(width: params[:viewport_width], height: params[:viewport_height], device_scale_factor: params[:device_scale_factor])
 
-      if html
-        page.set_content html
-      elsif url
-        page.goto url
+      if params[:html]
+        page.set_content params[:html]
+      elsif params[:url]
+        page.goto params[:url]
       end
 
-      image = page.screenshot full_page: full_page, type: type
+      image = page.screenshot full_page: params[:full_page], type: params[:type]
 
-      send_data image, type: "image/#{type}", disposition: "inline"
+      send_data image, type: Mime::Type.lookup_by_extension(params[:type]).to_s, disposition: "inline"
     end
+
+  rescue RailsParam::InvalidParameterError => e
+    render json: { error: e.message }, status: :bad_request
   end
 end

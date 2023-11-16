@@ -1,3 +1,5 @@
 #!/bin/bash -e
 
+rm -f /rails/tmp/pids/server.pid
+
 exec "${@}"

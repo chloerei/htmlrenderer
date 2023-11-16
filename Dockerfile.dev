@@ -21,5 +21,7 @@ RUN apt-get update -qq && \
 RUN apt-get install chromium-sandbox
 
 RUN useradd rails --create-home --shell /bin/bash && \
-    chown -R rails:rails /rails
+    chown -R rails:rails /rails && \
+    chown -R rails:rails /usr/local/bundle
+
 USER rails:rails
