@@ -7,6 +7,7 @@ class ImagesController < ApplicationController
     param! :url, String
     param! :full_page, :boolean, default: false
     param! :type, String, default: "png", in: %w(png jpeg webp)
+    param! :extra_http_headers, Hash, default: {}
 
     if (params[:html].blank? && params[:url].blank?) || (params[:html].present? && params[:url].present?)
       raise RailsParam::InvalidParameterError, "Either `html` or `url` must be provided"
@@ -16,6 +17,8 @@ class ImagesController < ApplicationController
       page = browser.new_page
 
       page.viewport = Puppeteer::Viewport.new(width: params[:viewport_width], height: params[:viewport_height], device_scale_factor: params[:device_scale_factor])
+
+      page.extra_http_headers = params[:extra_http_headers]
 
       if params[:html]
         page.set_content params[:html]
