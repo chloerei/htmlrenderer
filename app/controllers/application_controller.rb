@@ -12,7 +12,7 @@ class ApplicationController < ActionController::API
       end
 
       if !valid
-        render json: { error: "Unauthorized" }, status: :unauthorized
+        render json: {error: "Unauthorized"}, status: :unauthorized
       end
     end
   end
