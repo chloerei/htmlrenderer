@@ -6,6 +6,8 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     command: bin/rails server -b 0.0.0.0
+    cap_add:
+      - SYS_ADMIN
     ports:
       - 3000:3000
     volumes:
