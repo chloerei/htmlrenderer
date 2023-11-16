@@ -5,7 +5,7 @@ class ImagesController < ApplicationController
     param! :full_page, :boolean, default: false
     param! :type, String, default: "png", in: %w(png jpeg webp)
     param! :extra_http_headers, Hash, default: {}
-    param! :viewport, Hash do |viewport|
+    param! :viewport, Hash, default: {} do |viewport|
       viewport.param! :width, Integer, default: 1280
       viewport.param! :height, Integer, default: 800
       viewport.param! :device_scale_factor, Integer, default: 2
