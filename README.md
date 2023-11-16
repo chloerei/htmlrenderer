@@ -7,7 +7,7 @@ HTML Renderer is a micro service to render HTML to image/pdf in container.
 Start service:
 
 ```
-docker run -p 3000:3000 --cap-add SYS_ADMIN httprenderer
+docker run -p 3000:3000 --cap-add SYS_ADMIN ghcr.io/chloerei/htmlrenderer:master
 ```
 
 Post a URL to render:
