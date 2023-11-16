@@ -2,6 +2,8 @@
 
 HTML Renderer is a micro service to render HTML to image/pdf in container.
 
+> Warning: This service can easy access host file, it should be deploy in a private environment and don't expose it to public network. Don't render untrusted URL or HTML content.
+
 ## Usage
 
 Start service:
