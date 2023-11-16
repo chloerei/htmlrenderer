@@ -34,9 +34,9 @@ curl -X POST -d '{"url":"https://google.com"}' -H "Content-Type: application/jso
 | --- | --- | --- |
 | url | URL to render | nil |
 | html | HTML content to render | nil |
-| view_port[width] | View port width | 1280 |
-| view_port[height] | View port height | 800 |
-| view_port[device_scale_factor] | View port device scale factor | 2 |
+| viewport[width] | View port width | 1280 |
+| viewport[height] | View port height | 800 |
+| viewport[device_scale_factor] | View port device scale factor | 2 |
 | full_page | Whether to render full page | false |
 | type | Output type, can be `png` `jpeg` or `webp` | png |
 | extra_http_headers | Extra HTTP headers to send to the rendering page. For example: `extra_http_headers[Authorization]=xxx` | nil |
