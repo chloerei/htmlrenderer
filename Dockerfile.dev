@@ -15,8 +15,7 @@ RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
         build-essential \
         chromium \
-        fonts-noto-cjk \
-        pkg-config
+        fonts-noto-cjk
 
 RUN apt-get install chromium-sandbox
 
