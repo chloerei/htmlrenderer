@@ -40,5 +40,10 @@ module HTMLRenderer
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
+    config.x.auth_token = ENV.fetch("AUTH_TOKEN", nil)
+    if Rails.env.production? && config.x.auth_token.blank?
+      Rails.logger.warn("AUTH_TOKEN is not set")
+    end
   end
 end
