@@ -44,6 +44,6 @@ module HTMLRenderer
     # no use
     config.secret_key_base = SecureRandom.hex(64)
 
-    config.x.auth_token = ENV.fetch("AUTH_TOKEN", nil)
+    config.x.access_token = ENV.fetch("ACCESS_TOKEN", nil)
   end
 end

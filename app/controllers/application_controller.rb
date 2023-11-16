@@ -6,9 +6,9 @@ class ApplicationController < ActionController::API
   private
 
   def authenticate
-    if Rails.configuration.x.auth_token.present?
+    if Rails.configuration.x.access_token.present?
       valid = authenticate_with_http_token do |token, _options|
-        ActiveSupport::SecurityUtils.secure_compare(token, Rails.configuration.x.auth_token)
+        ActiveSupport::SecurityUtils.secure_compare(token, Rails.configuration.x.access_token)
       end
 
       if !valid
