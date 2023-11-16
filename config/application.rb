@@ -41,9 +41,9 @@ module HTMLRenderer
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
+    # no use
+    config.secret_key_base = SecureRandom.hex(64)
+
     config.x.auth_token = ENV.fetch("AUTH_TOKEN", nil)
-    if Rails.env.production? && config.x.auth_token.blank?
-      Rails.logger.warn("AUTH_TOKEN is not set")
-    end
   end
 end
