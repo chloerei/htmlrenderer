@@ -20,16 +20,14 @@ class ScreenshotController < ApplicationController
               width: {type: :number},
               height: {type: :number},
               scale: {type: :number}
-            },
-            additionalProperties: false
+            }
           },
           encoding: {type: :string},
           full_page: {type: :boolean},
           omit_background: {type: :boolean},
           quality: {type: :number},
           type: {type: :enum, enum: ["jpeg", "png", "webp"]}
-        },
-        additionalProperties: false
+        }
       },
       viewport: {
         type: :object,
@@ -46,8 +44,7 @@ class ScreenshotController < ApplicationController
       extra_http_headers: {
         type: :object
       }
-    },
-    additionalProperties: false
+    }
   }
 
   def create
@@ -80,6 +77,12 @@ class ScreenshotController < ApplicationController
   private
 
   def screenshot_params
-    @screenshot_params ||= params.require(:screenshot).permit!.to_h
+    @screenshot_params ||= params.require(:screenshot).permit(
+      :html,
+      :url,
+      options: [:capture_beyond_viewport, :encoding, :full_page, :omit_background, :quality, :type, clip: [:x, :y, :width, :height, :scale]],
+      viewport: [:width, :height, :device_scale_factor, :is_mobile, :has_touch, :is_landscape],
+      extra_http_headers: {}
+    ).to_h
   end
 end
