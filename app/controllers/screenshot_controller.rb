@@ -26,7 +26,7 @@ class ScreenshotController < ApplicationController
           full_page: {type: :boolean},
           omit_background: {type: :boolean},
           quality: {type: :number},
-          type: {type: :enum, enum: ["jpeg", "png", "webp"]}
+          type: {type: :string, enum: ["jpeg", "png", "webp"]}
         }
       },
       viewport: {
