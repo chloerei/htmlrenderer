@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :images, only: [:create]
+  resource :screenshot, only: [:create], controller: :screenshot
 
   get "up", to: "rails/health#show", as: :rails_health_check
 end

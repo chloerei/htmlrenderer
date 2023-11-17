@@ -1,4 +1,4 @@
-class ImagesController < ApplicationController
+class ScreenshotController < ApplicationController
   def create
     param! :html, String
     param! :url, String
