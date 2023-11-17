@@ -25,7 +25,7 @@ gem "bootsnap", require: false
 
 gem "puppeteer-ruby"
 
-gem "rails_param"
+gem "json-schema"
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
 # gem "rack-cors"

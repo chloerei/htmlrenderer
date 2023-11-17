@@ -1,42 +1,85 @@
 class ScreenshotController < ApplicationController
-  def create
-    param! :html, String
-    param! :url, String
-    param! :full_page, :boolean, default: false
-    param! :type, String, default: "png", in: %w[png jpeg webp]
-    param! :extra_http_headers, Hash, default: {}
-    param! :viewport, Hash, default: {} do |viewport|
-      viewport.param! :width, Integer, default: 1280
-      viewport.param! :height, Integer, default: 800
-      viewport.param! :device_scale_factor, Integer, default: 2
-    end
+  SCHEMA = {
+    type: :object,
+    oneOf: [
+      {required: [:html]},
+      {required: [:url]}
+    ],
+    properties: {
+      html: {type: :string},
+      url: {type: :string},
+      options: {
+        type: :object,
+        properties: {
+          capture_beyond_viewport: {type: :boolean},
+          clip: {
+            type: :object,
+            properties: {
+              x: {type: :number},
+              y: {type: :number},
+              width: {type: :number},
+              height: {type: :number},
+              scale: {type: :number}
+            },
+            additionalProperties: false
+          },
+          encoding: {type: :string},
+          full_page: {type: :boolean},
+          omit_background: {type: :boolean},
+          quality: {type: :number},
+          type: {type: :enum, enum: ["jpeg", "png", "webp"]}
+        },
+        additionalProperties: false
+      },
+      viewport: {
+        type: :object,
+        properties: {
+          width: {type: :number},
+          height: {type: :number},
+          device_scale_factor: {type: :number},
+          is_mobile: {type: :boolean},
+          has_touch: {type: :boolean},
+          is_landscape: {type: :boolean},
+          additionalProperties: false
+        }
+      },
+      extra_http_headers: {
+        type: :object
+      }
+    },
+    additionalProperties: false
+  }
 
-    if (params[:html].blank? && params[:url].blank?) || (params[:html].present? && params[:url].present?)
-      raise RailsParam::InvalidParameterError, "Either `html` or `url` must be provided"
-    end
+  def create
+    JSON::Validator.validate!(SCHEMA, screenshot_params)
 
     Puppeteer.launch do |browser|
       page = browser.new_page
 
-      page.viewport = Puppeteer::Viewport.new(
-        width: params[:viewport][:width],
-        height: params[:viewport][:height],
-        device_scale_factor: params[:viewport][:device_scale_factor]
-      )
-
-      page.extra_http_headers = params[:extra_http_headers]
-
-      if params[:html]
-        page.set_content params[:html]
-      elsif params[:url]
-        page.goto params[:url]
+      if screenshot_params[:viewport]
+        page.viewport = Puppeteer::Viewport.new(**screenshot_params[:viewport].to_options)
       end
 
-      image = page.screenshot full_page: params[:full_page], type: params[:type]
+      if screenshot_params[:extra_http_headers]
+        page.extra_http_headers = screenshot_params[:extra_http_headers]
+      end
 
-      send_data image, type: Mime::Type.lookup_by_extension(params[:type]).to_s, disposition: "inline"
+      if screenshot_params[:html]
+        page.set_content screenshot_params[:html]
+      elsif screenshot_params[:url]
+        page.goto screenshot_params[:url]
+      end
+
+      image = page.screenshot(**(screenshot_params[:options] || {}).to_options)
+
+      content_type = Mime::Type.lookup_by_extension(screenshot_params.dig(:options, :type) || "png").to_s
+      send_data image, type: content_type, disposition: "inline"
     end
-  rescue RailsParam::InvalidParameterError => e
-    render json: {error: e.message}, status: :bad_request
+  end
+
+  private
+
+  def screenshot_params
+    @screenshot_params ||= params.require(:screenshot).permit!.to_h
   end
 end

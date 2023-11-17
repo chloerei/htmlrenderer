@@ -3,6 +3,8 @@ class ApplicationController < ActionController::API
 
   before_action :authenticate
 
+  rescue_from JSON::Schema::ValidationError, with: :render_json_schema_validation_error
+
   private
 
   def authenticate
@@ -15,5 +17,9 @@ class ApplicationController < ActionController::API
         render json: {error: "Unauthorized"}, status: :unauthorized
       end
     end
+  end
+
+  def render_json_schema_validation_error(e)
+    render json: {error: e.message}, status: :bad_request
   end
 end

@@ -4,46 +4,28 @@ HTML Renderer is a micro service to render HTML to image/pdf in container.
 
 > Warning: This service can easy access host file, it should be deploy in a private environment and don't expose it to public network. Don't render untrusted URL or HTML content.
 
-## Usage
-
-Start service:
+## Start service
 
 ```
 docker run -p 3000:3000 --cap-add SYS_ADMIN ghcr.io/chloerei/htmlrenderer:master
 ```
 
-Post a URL to render:
+## API
+
+### /screenshot
 
 ```
-curl -X POST -d "url=https://google.com" -o image.png localhost:3000/images
+curl -X POST localhost:3000/screenshot \
+  -H "Content-Type: application/json" \
+  -o screenshot.png \
+  -d '{
+    "url": "https://google.com"
+  }'
 ```
 
-or post HTML content:
+All options, see [SCHEMA](app/controllers/screenshot_controller.rb) .
 
-```
-curl -X POST -d "html=<h1>helloworld</h1>" -o image.png localhost:3000/images
-```
-
-or use JSON params:
-
-```
-curl -X POST -d '{"url":"https://google.com"}' -H "Content-Type: application/json" -o image.png localhost:3000/images
-```
-
-## Options
-
-| Name | Description | Default |
-| --- | --- | --- |
-| url | URL to render | nil |
-| html | HTML content to render | nil |
-| viewport[width] | View port width | 1280 |
-| viewport[height] | View port height | 800 |
-| viewport[device_scale_factor] | View port device scale factor | 2 |
-| full_page | Whether to render full page | false |
-| type | Output type, can be `png` `jpeg` or `webp` | png |
-| extra_http_headers | Extra HTTP headers to send to the rendering page. For example: `extra_http_headers[Authorization]=xxx` | nil |
-
-## Access Token
+## Authentication
 
 In production, it's recommended to set a access token to protect the service.
 
@@ -54,7 +36,11 @@ docker run -p 3000:3000 --cap-add SYS_ADMIN --env ACCESS_TOKEN=<token> httprende
 Then you need to pass the access token in the request header:
 
 ```
-curl -X POST -d "url=https://google.com" -H "Authorization: Bearer <token>" "localhost:3000/images"
+curl -X POST localhost:3000/screenshot \
+  -H "Authorization: Bearer <token>" \
+  -d '{
+    "url": "https://google.com"
+  }'
 ```
 
 ## Lang
