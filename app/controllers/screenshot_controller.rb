@@ -48,13 +48,13 @@ class ScreenshotController < ApplicationController
   }
 
   def create
-    JSON::Validator.validate!(SCHEMA, screenshot_params)
+    JSON::Validator.validate!(SCHEMA, screenshot_params.to_h)
 
     Puppeteer.launch do |browser|
       page = browser.new_page
 
       if screenshot_params[:viewport]
-        page.viewport = Puppeteer::Viewport.new(**screenshot_params[:viewport].to_options)
+        page.viewport = Puppeteer::Viewport.new(**screenshot_params[:viewport].to_h.to_options)
       end
 
       if screenshot_params[:extra_http_headers]
@@ -67,7 +67,7 @@ class ScreenshotController < ApplicationController
         page.goto screenshot_params[:url]
       end
 
-      image = page.screenshot(**(screenshot_params[:options] || {}).to_options)
+      image = page.screenshot(**(screenshot_params[:options].to_h || {}).to_options)
 
       content_type = Mime::Type.lookup_by_extension(screenshot_params.dig(:options, :type) || "png").to_s
       send_data image, type: content_type, disposition: "inline"
@@ -83,6 +83,6 @@ class ScreenshotController < ApplicationController
       options: [:capture_beyond_viewport, :encoding, :full_page, :omit_background, :quality, :type, clip: [:x, :y, :width, :height, :scale]],
       viewport: [:width, :height, :device_scale_factor, :is_mobile, :has_touch, :is_landscape],
       extra_http_headers: {}
-    ).to_h
+    )
   end
 end

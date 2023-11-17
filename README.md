@@ -12,6 +12,20 @@ docker run -p 3000:3000 --cap-add SYS_ADMIN ghcr.io/chloerei/htmlrenderer:master
 
 ## API
 
+### /pdf
+
+```
+curl -X POST localhost:3000/pdf \
+  -H "Content-Type: application/json" \
+  -o file.pdf \
+  -d '{
+    "url": "https://google.com"
+  }'
+```
+
+All options, see [PdfController::SCHEMA](app/controllers/screenshot_controller.rb) .
+
+
 ### /screenshot
 
 ```
@@ -23,7 +37,7 @@ curl -X POST localhost:3000/screenshot \
   }'
 ```
 
-All options, see [SCHEMA](app/controllers/screenshot_controller.rb) .
+All options, see [ScreenshotController::SCHEMA](app/controllers/screenshot_controller.rb) .
 
 ## Authentication
 
