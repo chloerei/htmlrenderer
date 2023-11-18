@@ -8,7 +8,7 @@ HTML Renderer is a micro service to render HTML to image/pdf in container.
 ## Start service
 
 ```
-docker run -p 3000:3000 --cap-add SYS_ADMIN ghcr.io/chloerei/htmlrenderer:lastest
+docker run -p 3000:3000 --cap-add SYS_ADMIN ghcr.io/chloerei/htmlrenderer:latest
 ```
 
 ## API
@@ -108,7 +108,7 @@ docker run -p 3000:3000 --cap-add SYS_ADMIN --env LANG=zh_CN ghcr.io/chloerei/ht
 Your can install font by build your own image:
 
 ```Dockerfile
-FROM ghcr.io/chloerei/htmlrenderer:lastest
+FROM ghcr.io/chloerei/htmlrenderer:latest
 
 RUN apt update && apt install -y <font-package>
 ```
