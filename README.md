@@ -40,6 +40,26 @@ curl -X POST localhost:3000/screenshot \
 
 All options, see [ScreenshotController::SCHEMA](app/controllers/screenshot_controller.rb) .
 
+#### Viewport
+
+You can set the viewport size by `width` and `height` options:
+
+```
+curl -X POST localhost:3000/screenshot \
+  -H "Content-Type: application/json" \
+  -o screenshot.png \
+  -d '{
+    "url": "https://google.com",
+    "viewport": {
+      "width": 1280,
+      "height": 800,
+      "device_scale_factor": 2,
+    }
+  }'
+```
+
+Set `device_scale_factor` to 2 for high DPI screen, then the screenshot will be 2560x1600.
+
 ## Authentication
 
 In production, it's recommended to set a access token to protect the service.
