@@ -58,21 +58,49 @@ curl -X POST localhost:3000/screenshot \
   }'
 ```
 
-## Lang
+## Lang and Font
 
 This service already install Noto CJK fonts. This font has variant languages support. Sometimes your need to set the lang to render the correct font.
 
-When render HTML contet, add `lang` attribute to the `<html>` tag:
+When render HTML content, add `lang` attribute to the `<html>` tag:
 
 ```
 <html lang="zh-CN">
 </html>
 ```
 
-When render URL, add `Accept-Language` header to the request:
+Some site set lang by browser language, you can set the `Accept-Language` header to change the lang:
 
 ```
-curl -X POST -d "url=https://google.com" -H "Accept-Language: zh-CN" -o image.png localhost:3000/images
+curl -X POST localhost:3000/screenshot \
+  -H "Accept-Language: zh-CN" \
+  -d '{
+    "url": "https://google.com"
+  }'
 ```
 
-But no all website set `lang` attribute correctly, you can download and modify HTML content before render.
+You can set the `LANG` environment variable to change the default lang:
+
+```
+docker run -p 3000:3000 --cap-add SYS_ADMIN --env LANG=zh_CN ghcr.io/chloerei/htmlrenderer:master
+```
+
+Your can install font by build your own image:
+
+```Dockerfile
+FROM ghcr.io/chloerei/htmlrenderer:master
+
+RUN apt update && apt install -y <font-package>
+```
+
+## Development
+
+Clone the repo to local, then run:
+
+```
+docker-compose up
+```
+
+## License
+
+MIT
