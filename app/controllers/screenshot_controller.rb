@@ -69,7 +69,7 @@ class ScreenshotController < ApplicationController
         page.goto screenshot_params[:url]
       end
 
-      image = page.screenshot(**(screenshot_params[:options]).to_h)
+      image = page.screenshot(**screenshot_params[:options].to_h)
 
       content_type = Mime::Type.lookup_by_extension(screenshot_params.dig(:options, :type) || "png").to_s
       send_data image, type: content_type, disposition: "inline"
